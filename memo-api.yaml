@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: メモアプリAPI
+  version: 1.0.0
+  description: シンプルなメモアプリのためのRESTful API
+
+paths:
+  /memos:
+    get:
+      summary: メモ一覧の取得
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Memo'
+    post:
+      summary: 新規メモの作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMemo'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memo'
+
+  /memos/{memoId}:
+    get:
+      summary: 特定のメモの取得
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memo'
+        '404':
+          description: メモが見つかりません
+
+    put:
+      summary: メモの更新
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMemo'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memo'
+        '404':
+          description: メモが見つかりません
+
+    delete:
+      summary: メモの削除
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 削除成功
+        '404':
+          description: メモが見つかりません
+
+components:
+  schemas:
+    Memo:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    NewMemo:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+        content:
+          type: string
