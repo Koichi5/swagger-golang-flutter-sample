@@ -146,7 +146,7 @@ No authorization required
 import 'package:openapi/api.dart';
 
 final api_instance = DefaultApi();
-final memoId = memoId_example; // String | 
+final memoId = ; // int | 
 final newMemo = NewMemo(); // NewMemo | 
 
 try {
@@ -161,7 +161,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **memoId** | **String**|  | 
+ **memoId** | [**int**](.md)|  | 
  **newMemo** | [**NewMemo**](NewMemo.md)|  | 
 
 ### Return type

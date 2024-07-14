@@ -156,7 +156,7 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
-
+    
     }
     return null;
   }
@@ -167,7 +167,7 @@ class DefaultApi {
   ///
   /// Parameters:
   ///
-  /// * [String] memoId (required):
+  /// * [int] memoId (required):
   ///
   /// * [NewMemo] newMemo (required):
   Future<Response> memosMemoIdPutWithHttpInfo(int memoId, NewMemo newMemo,) async {
@@ -200,7 +200,7 @@ class DefaultApi {
   ///
   /// Parameters:
   ///
-  /// * [String] memoId (required):
+  /// * [int] memoId (required):
   ///
   /// * [NewMemo] newMemo (required):
   Future<Memo?> memosMemoIdPut(int memoId, NewMemo newMemo,) async {
@@ -213,7 +213,7 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
-
+    
     }
     return null;
   }
@@ -270,7 +270,7 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
-
+    
     }
     return null;
   }
@@ -322,7 +322,7 @@ class DefaultApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
-
+    
     }
     return null;
   }

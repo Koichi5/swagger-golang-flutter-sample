@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:swagger_golang_flutter_sample/api/lib/api.dart';
@@ -25,29 +23,33 @@ class _MemoListScreenState extends State<MemoListScreen> {
     _fetchMemos();
   }
 
-Future<void> _fetchMemos() async {
-  try {
-    final response = await api.memosGetWithHttpInfo();
-    print('Raw API Response: ${response.body}');
-
-    final jsonList = json.decode(response.body) as List;
-    final fetchedMemos = jsonList
-        .map((jsonMemo) => Memo.fromJson(jsonMemo))
-        .where((memo) => memo != null)  // null要素をフィルタリング
-        .cast<Memo>()  // List<Memo?>からList<Memo>にキャスト
-        .toList();
-
-    setState(() {
-      memos = fetchedMemos;
-    });
-
-    for (var memo in memos) {
-      print('Flutter: Memo ID: ${memo.id}, Title: ${memo.title}');
+  Future<void> _fetchMemos() async {
+    try {
+      final fetchedMemos = await api.memosGet();
+      setState(() {
+        memos = fetchedMemos?.toList() ?? [];
+      });
+    } catch (e) {
+      print('Error fetching memos: $e');
     }
-  } catch (e) {
-    print('Error fetching memos: $e');
   }
-}
+
+  Future<void> _deleteMemo(Memo memo) async {
+    try {
+      await api.memosMemoIdDelete(memo.id.toString());
+      setState(() {
+        memos = memos.where((m) => m.id != memo.id).toList(); // 新しいリストを作成
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('メモが削除されました')),
+      );
+    } catch (e) {
+      print('Error deleting memo: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('メモの削除に失敗しました')),
+      );
+    }
+  }
 
   Future<void> _searchMemos(String keyword) async {
     try {
@@ -57,22 +59,6 @@ Future<void> _fetchMemos() async {
       });
     } catch (e) {
       print('Error searching memos: $e');
-    }
-  }
-
-  Future<void> _deleteMemo(String memoId) async {
-    try {
-      await api.memosMemoIdDelete(memoId);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('メモが削除されました')),
-      );
-      setState(() {
-        memos.removeWhere((memo) => memo.id == memoId);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('エラーが発生しました: $e')),
-      );
     }
   }
 
@@ -121,7 +107,7 @@ Future<void> _fetchMemos() async {
                         Wrap(
                           spacing: 8.0,
                           runSpacing: 4.0,
-                          children: (memo.tags ?? [])
+                          children: (memo.tags)
                               .map((tag) => Chip(
                                     label: Text(tag),
                                     backgroundColor: Colors.blue.shade100,
@@ -159,7 +145,22 @@ Future<void> _fetchMemos() async {
                   ),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
-                    _deleteMemo(memo.id.toString());
+                    final deletedMemo = memo;
+                    setState(() {
+                      memos = List.from(memos)
+                        ..removeAt(index); // 新しいリストを作成して要素を削除
+                    });
+                    _deleteMemo(deletedMemo).then((_) {
+                      // 削除が成功した場合の処理（必要に応じて）
+                    }).catchError((error) {
+                      // 削除が失敗した場合、メモをリストに戻す
+                      setState(() {
+                        memos.insert(index, deletedMemo);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('メモの削除に失敗しました')),
+                      );
+                    });
                   },
                   child: ListTile(
                     title: Text(memo.title ?? ''),
@@ -170,7 +171,7 @@ Future<void> _fetchMemos() async {
                         Wrap(
                           spacing: 8.0,
                           runSpacing: 4.0,
-                          children: (memo.tags ?? [])
+                          children: (memo.tags)
                               .map((tag) => Chip(
                                     label: Text(
                                       tag,

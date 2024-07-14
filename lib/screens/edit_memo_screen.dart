@@ -27,7 +27,7 @@ class _EditMemoScreenState extends State<EditMemoScreen> {
     _titleController = TextEditingController(text: widget.memo.title);
     _contentController = TextEditingController(text: widget.memo.content);
     _tagController = TextEditingController();
-    _tags = widget.memo.tags?.toList() ?? [];
+    _tags = widget.memo.tags.toList();
   }
 
   @override
