@@ -43,7 +43,9 @@ Future<void> _fetchMemos() async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('メモが削除されました')),
       );
-      _fetchMemos(); // リストを更新
+      setState(() {
+        memos.removeWhere((memo) => memo.id == memoId);
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('エラーが発生しました: $e')),

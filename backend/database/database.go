@@ -18,3 +18,7 @@ func ConnectDatabase() {
 
 	DB = database
 }
+
+func MigrateDB(db *gorm.DB) error {
+    return db.AutoMigrate(&models.Memo{})
+}
