@@ -17,13 +17,23 @@ func NewMemoHandler(service *services.MemoService) *MemoHandler {
 }
 
 func (h *MemoHandler) CreateMemo(c *gin.Context) {
-    var memo models.Memo
-    if err := c.ShouldBindJSON(&memo); err != nil {
+    var input struct {
+        Title   string   `json:"title" binding:"required"`
+        Content string   `json:"content" binding:"required"`
+        Tags    []string `json:"tags"`
+    }
+    if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-    if err := h.service.CreateMemo(&memo); err != nil {
+    memo := &models.Memo{
+        Title:   input.Title,
+        Content: input.Content,
+        Tags:    input.Tags,
+    }
+
+    if err := h.service.CreateMemo(memo); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
@@ -62,13 +72,14 @@ func (h *MemoHandler) UpdateMemo(c *gin.Context) {
     var input struct {
         Title   string `json:"title"`
         Content string `json:"content"`
+        Tags []string `json:"tags"`
     }
     if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-    updatedMemo, err := h.service.UpdateMemo(uint(id), input.Title, input.Content)
+    updatedMemo, err := h.service.UpdateMemo(uint(id), input.Title, input.Content, input.Tags)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
@@ -101,4 +112,20 @@ func (h *MemoHandler) SearchMemos(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, memos)
+}
+
+func (h *MemoHandler) GetMemosByTag(c *gin.Context) {
+    tag := c.Query("tag")
+    if tag == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Tag is required"})
+        return
+    }
+
+    memos, err := h.service.GetMemosByTag(tag)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, memos)
 }

@@ -10,13 +10,25 @@ class _CreateMemoScreenState extends State<CreateMemoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  final _tagController = TextEditingController();
+  List<String> _tags = [];
   final DefaultApi api = DefaultApi(ApiClient());
 
   @override
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
+    _tagController.dispose();
     super.dispose();
+  }
+
+  void _addTag() {
+    setState(() {
+      if (_tagController.text.isNotEmpty) {
+        _tags.add(_tagController.text);
+        _tagController.clear();
+      }
+    });
   }
 
   Future<void> _createMemo() async {
@@ -25,6 +37,7 @@ class _CreateMemoScreenState extends State<CreateMemoScreen> {
         final newMemo = NewMemo(
           title: _titleController.text,
           content: _contentController.text,
+          tags: _tags, // Use the _tags list instead of [_tagController.text]
         );
         final createdMemo = await api.memosPost(newMemo);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -74,6 +87,34 @@ class _CreateMemoScreenState extends State<CreateMemoScreen> {
                 },
               ),
               const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _tagController,
+                      decoration: InputDecoration(labelText: 'Add Tag'),
+                      onSubmitted: (_) => _addTag(),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: _addTag,
+                  ),
+                ],
+              ),
+              Wrap(
+                spacing: 8.0,
+                children: _tags
+                    .map((tag) => Chip(
+                          label: Text(tag),
+                          onDeleted: () {
+                            setState(() {
+                              _tags.remove(tag);
+                            });
+                          },
+                        ))
+                    .toList(),
+              ),
               ElevatedButton(
                 onPressed: _createMemo,
                 child: const Text('メモを作成'),

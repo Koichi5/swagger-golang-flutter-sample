@@ -33,6 +33,7 @@ func setupRouter(db *gorm.DB) *gin.Engine {
     router.PUT("/memos/:id", memoHandler.UpdateMemo)
     router.DELETE("/memos/:id", memoHandler.DeleteMemo)
     router.GET("/memos/search", memoHandler.SearchMemos)
+	router.GET("/memos/bytag", memoHandler.GetMemosByTag)
 
     return router
 }

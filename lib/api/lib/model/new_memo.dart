@@ -3,7 +3,6 @@
 //
 // @dart=2.18
 
-// ignore_for_file: unused_element, unused_import
 // ignore_for_file: always_put_required_named_parameters_first
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: lines_longer_than_80_chars
@@ -15,30 +14,34 @@ class NewMemo {
   NewMemo({
     required this.title,
     required this.content,
+    this.tags,
   });
 
   String title;
-
   String content;
+  List<String>? tags;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is NewMemo &&
-    other.title == title &&
-    other.content == content;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NewMemo &&
+          other.title == title &&
+          other.content == content &&
+          const ListEquality().equals(other.tags, tags);
 
   @override
-  int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (title.hashCode) +
-    (content.hashCode);
+  int get hashCode => title.hashCode ^ content.hashCode ^ tags.hashCode;
 
   @override
-  String toString() => 'NewMemo[title=$title, content=$content]';
+  String toString() => 'NewMemo[title=$title, content=$content, tags=$tags]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'title'] = this.title;
-      json[r'content'] = this.content;
+    json[r'title'] = this.title;
+    json[r'content'] = this.content;
+    if (tags != null) {
+      json[r'tags'] = tags;
+    }
     return json;
   }
 
@@ -54,8 +57,10 @@ class NewMemo {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "NewMemo[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "NewMemo[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "NewMemo[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "NewMemo[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -63,12 +68,18 @@ class NewMemo {
       return NewMemo(
         title: mapValueOfType<String>(json, r'title')!,
         content: mapValueOfType<String>(json, r'content')!,
+        tags: (json[r'tags'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList(),
       );
     }
     return null;
   }
 
-  static List<NewMemo> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<NewMemo> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <NewMemo>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -96,13 +107,19 @@ class NewMemo {
   }
 
   // maps a json object with a list of NewMemo-objects as value to a dart map
-  static Map<String, List<NewMemo>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<NewMemo>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<NewMemo>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = NewMemo.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = NewMemo.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -114,4 +131,3 @@ class NewMemo {
     'content',
   };
 }
-

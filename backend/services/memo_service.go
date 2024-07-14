@@ -25,7 +25,7 @@ func (s *MemoService) GetMemoByID(id uint) (*models.Memo, error) {
     return s.repo.GetByID(id)
 }
 
-func (s *MemoService) UpdateMemo(id uint, title, content string) (*models.Memo, error) {
+func (s *MemoService) UpdateMemo(id uint, title, content string, tags []string) (*models.Memo, error) {
     memo, err := s.repo.GetByID(id)
     if err != nil {
         return nil, err
@@ -33,6 +33,7 @@ func (s *MemoService) UpdateMemo(id uint, title, content string) (*models.Memo, 
 
     memo.Title = title
     memo.Content = content
+    memo.Tags = tags
 
     err = s.repo.Update(memo)
     if err != nil {
@@ -48,4 +49,8 @@ func (s *MemoService) DeleteMemo(id uint) error {
 
 func (s *MemoService) SearchMemos(keyword string) ([]models.Memo, error) {
 	return s.repo.SearchMemos(keyword)
+}
+
+func (s *MemoService) GetMemosByTag(tag string) ([]models.Memo, error) {
+    return s.repo.GetByTag(tag)
 }

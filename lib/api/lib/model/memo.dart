@@ -11,19 +11,28 @@
 part of openapi.api;
 
 class Memo {
-  String? id;  // 注意: 型を int から String に変更
+  String? id;
   String? title;
   String? content;
+  List<String>? tags;
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Memo({this.id, this.title, this.content, this.createdAt, this.updatedAt});
+  Memo({
+    this.id,
+    this.title,
+    this.content,
+    this.tags,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory Memo.fromJson(Map<String, dynamic> json) {
     return Memo(
-      id: json['ID'].toString(),  // int を String に変換
+      id: json['ID']?.toString(),
       title: json['title'],
       content: json['content'],
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       createdAt: json['CreatedAt'] != null ? DateTime.parse(json['CreatedAt']) : null,
       updatedAt: json['UpdatedAt'] != null ? DateTime.parse(json['UpdatedAt']) : null,
     );
@@ -34,6 +43,7 @@ class Memo {
       'ID': id,
       'title': title,
       'content': content,
+      'tags': tags,
       'CreatedAt': createdAt?.toIso8601String(),
       'UpdatedAt': updatedAt?.toIso8601String(),
     };

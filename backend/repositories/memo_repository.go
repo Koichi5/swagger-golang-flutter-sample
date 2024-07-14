@@ -33,7 +33,7 @@ func (r *MemoRepository) GetByID(id uint) (*models.Memo, error) {
 }
 
 func (r *MemoRepository) Update(memo *models.Memo) error {
-    return r.DB.Model(memo).Updates(models.Memo{Title: memo.Title, Content: memo.Content}).Error
+    return r.DB.Model(memo).Updates(models.Memo{Title: memo.Title, Content: memo.Content, Tags: memo.Tags}).Error
 }
 
 func (r *MemoRepository) Delete(id uint) error {
@@ -42,6 +42,12 @@ func (r *MemoRepository) Delete(id uint) error {
 
 func (r *MemoRepository) SearchMemos(keyword string) ([]models.Memo, error) {
 	var memos []models.Memo
-	result:= r.DB.Where("title LIKE ? OR description LIKE ?", "%"+keyword+"%", "%"+keyword+"%").Find(&memos)
+	result:= r.DB.Where("title LIKE ? OR content LIKE ?", "%"+keyword+"%", "%"+keyword+"%").Find(&memos)
 	return memos, result.Error
+}
+
+func (r *MemoRepository) GetByTag(tag string) ([]models.Memo, error) {
+    var memos []models.Memo
+    err := r.DB.Where("tags LIKE ?", "%"+tag+"%").Find(&memos).Error
+    return memos, err
 }

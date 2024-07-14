@@ -43,10 +43,40 @@ class DefaultApi {
     );
   }
 
+  Future<Response> _searchMemo(
+      {List<Map<String, dynamic>>? queryParamsMap}) async {
+    // ignore: prefer_const_declarations
+    final path = '/memos/search';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    queryParamsMap?.forEach((queryParamMap) {
+      queryParamMap.forEach((key, value) {
+        queryParams.add(QueryParam(key, value.toString()));
+      });
+    });
+
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
   /// メモ一覧の取得
   Future<List<Memo>?> memosGet() async {
     final response = await memosGetWithHttpInfo();
-    print('API Response: ${response.body}');
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -184,7 +214,7 @@ class DefaultApi {
   /// * [NewMemo] newMemo (required):
   Future<Response> memosMemoIdPutWithHttpInfo(
     String memoId,
-    NewMemo newMemo,
+    Memo newMemo,
   ) async {
     // ignore: prefer_const_declarations
     final path = r'/memos/{memoId}'.replaceAll('{memoId}', memoId);
@@ -218,12 +248,9 @@ class DefaultApi {
   /// * [NewMemo] newMemo (required):
   Future<Memo?> memosMemoIdPut(
     String memoId,
-    NewMemo newMemo,
+    Memo memo,
   ) async {
-    final response = await memosMemoIdPutWithHttpInfo(
-      memoId,
-      newMemo,
-    );
+    final response = await memosMemoIdPutWithHttpInfo(memoId, memo);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -278,12 +305,8 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [NewMemo] newMemo (required):
-  Future<Memo?> memosPost(
-    NewMemo newMemo,
-  ) async {
-    final response = await memosPostWithHttpInfo(
-      newMemo,
-    );
+  Future<Memo?> memosPost(NewMemo newMemo) async {
+    final response = await memosPostWithHttpInfo(newMemo);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -298,5 +321,67 @@ class DefaultApi {
       ) as Memo;
     }
     return null;
+  }
+
+  Future<List<Memo>> memosSearch(String keyword) async {
+    final response = await _searchMemo(queryParamsMap: [
+      {'keyword': keyword}
+    ]);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>')
+              as List)
+          .cast<Memo>()
+          .toList(growable: false);
+    }
+    return [];
+  }
+
+  Future<List<Memo>> getMemosByTag(String tag) async {
+    final response = await _getMemosByTag(queryParamsMap: [
+      {'tag': tag}
+    ]);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>')
+              as List)
+          .cast<Memo>()
+          .toList(growable: false);
+    }
+    return [];
+  }
+
+  Future<Response> _getMemosByTag(
+      {List<Map<String, dynamic>>? queryParamsMap}) async {
+    final path = '/memos/bytag';
+    final queryParams = <QueryParam>[];
+    queryParamsMap?.forEach((queryParamMap) {
+      queryParamMap.forEach((key, value) {
+        queryParams.add(QueryParam(key, value.toString()));
+      });
+    });
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+    const contentTypes = <String>[];
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      null,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
   }
 }
