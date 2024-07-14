@@ -184,6 +184,8 @@ class ApiClient {
           return value is DateTime ? value : DateTime.tryParse(value);
         case 'Memo':
           return Memo.fromJson(value);
+        case 'MemosMemoIdTagsPostRequest':
+          return MemosMemoIdTagsPostRequest.fromJson(value);
         case 'NewMemo':
           return NewMemo.fromJson(value);
         default:

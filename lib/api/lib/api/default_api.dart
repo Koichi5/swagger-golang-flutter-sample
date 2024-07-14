@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
+
 class DefaultApi {
-  DefaultApi([ApiClient? apiClient])
-      : apiClient = apiClient ?? defaultApiClient;
+  DefaultApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -32,36 +32,6 @@ class DefaultApi {
 
     const contentTypes = <String>[];
 
-    return apiClient.invokeAPI(
-      path,
-      'GET',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  Future<Response> _searchMemo(
-      {List<Map<String, dynamic>>? queryParamsMap}) async {
-    // ignore: prefer_const_declarations
-    final path = '/memos/search';
-
-    // ignore: prefer_final_locals
-    Object? postBody;
-
-    final queryParams = <QueryParam>[];
-    queryParamsMap?.forEach((queryParamMap) {
-      queryParamMap.forEach((key, value) {
-        queryParams.add(QueryParam(key, value.toString()));
-      });
-    });
-
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    const contentTypes = <String>[];
 
     return apiClient.invokeAPI(
       path,
@@ -83,13 +53,12 @@ class DefaultApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>')
-              as List)
-          .cast<Memo>()
-          .toList(growable: false);
+      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>') as List)
+        .cast<Memo>()
+        .toList(growable: false);
+
     }
     return null;
   }
@@ -101,11 +70,10 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [String] memoId (required):
-  Future<Response> memosMemoIdDeleteWithHttpInfo(
-    String memoId,
-  ) async {
+  Future<Response> memosMemoIdDeleteWithHttpInfo(String memoId,) async {
     // ignore: prefer_const_declarations
-    final path = r'/memos/{memoId}'.replaceAll('{memoId}', memoId);
+    final path = r'/memos/{memoId}'
+      .replaceAll('{memoId}', memoId);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -115,6 +83,7 @@ class DefaultApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -132,12 +101,8 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [String] memoId (required):
-  Future<void> memosMemoIdDelete(
-    String memoId,
-  ) async {
-    final response = await memosMemoIdDeleteWithHttpInfo(
-      memoId,
-    );
+  Future<void> memosMemoIdDelete(String memoId,) async {
+    final response = await memosMemoIdDeleteWithHttpInfo(memoId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -150,11 +115,10 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [String] memoId (required):
-  Future<Response> memosMemoIdGetWithHttpInfo(
-    String memoId,
-  ) async {
+  Future<Response> memosMemoIdGetWithHttpInfo(String memoId,) async {
     // ignore: prefer_const_declarations
-    final path = r'/memos/{memoId}'.replaceAll('{memoId}', memoId);
+    final path = r'/memos/{memoId}'
+      .replaceAll('{memoId}', memoId);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -164,6 +128,7 @@ class DefaultApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
+
 
     return apiClient.invokeAPI(
       path,
@@ -181,24 +146,17 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [String] memoId (required):
-  Future<Memo?> memosMemoIdGet(
-    String memoId,
-  ) async {
-    final response = await memosMemoIdGetWithHttpInfo(
-      memoId,
-    );
+  Future<Memo?> memosMemoIdGet(String memoId,) async {
+    final response = await memosMemoIdGetWithHttpInfo(memoId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'Memo',
-      ) as Memo;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
+
     }
     return null;
   }
@@ -212,12 +170,10 @@ class DefaultApi {
   /// * [String] memoId (required):
   ///
   /// * [NewMemo] newMemo (required):
-  Future<Response> memosMemoIdPutWithHttpInfo(
-    String memoId,
-    Memo newMemo,
-  ) async {
+  Future<Response> memosMemoIdPutWithHttpInfo(int memoId, NewMemo newMemo,) async {
     // ignore: prefer_const_declarations
-    final path = r'/memos/{memoId}'.replaceAll('{memoId}', memoId);
+    final path = r'/memos/{memoId}'
+      .replaceAll('{memoId}', memoId.toString());
 
     // ignore: prefer_final_locals
     Object? postBody = newMemo;
@@ -227,6 +183,7 @@ class DefaultApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -246,23 +203,74 @@ class DefaultApi {
   /// * [String] memoId (required):
   ///
   /// * [NewMemo] newMemo (required):
-  Future<Memo?> memosMemoIdPut(
-    String memoId,
-    Memo memo,
-  ) async {
-    final response = await memosMemoIdPutWithHttpInfo(memoId, memo);
+  Future<Memo?> memosMemoIdPut(int memoId, NewMemo newMemo,) async {
+    final response = await memosMemoIdPutWithHttpInfo(memoId, newMemo,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'Memo',
-      ) as Memo;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
+
+    }
+    return null;
+  }
+
+  /// タグの追加
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] memoId (required):
+  ///
+  /// * [MemosMemoIdTagsPostRequest] memosMemoIdTagsPostRequest (required):
+  Future<Response> memosMemoIdTagsPostWithHttpInfo(String memoId, MemosMemoIdTagsPostRequest memosMemoIdTagsPostRequest,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/memos/{memoId}/tags'
+      .replaceAll('{memoId}', memoId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = memosMemoIdTagsPostRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// タグの追加
+  ///
+  /// Parameters:
+  ///
+  /// * [String] memoId (required):
+  ///
+  /// * [MemosMemoIdTagsPostRequest] memosMemoIdTagsPostRequest (required):
+  Future<Memo?> memosMemoIdTagsPost(String memoId, MemosMemoIdTagsPostRequest memosMemoIdTagsPostRequest,) async {
+    final response = await memosMemoIdTagsPostWithHttpInfo(memoId, memosMemoIdTagsPostRequest,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
+
     }
     return null;
   }
@@ -274,9 +282,7 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [NewMemo] newMemo (required):
-  Future<Response> memosPostWithHttpInfo(
-    NewMemo newMemo,
-  ) async {
+  Future<Response> memosPostWithHttpInfo(NewMemo newMemo,) async {
     // ignore: prefer_const_declarations
     final path = r'/memos';
 
@@ -288,6 +294,7 @@ class DefaultApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -305,83 +312,75 @@ class DefaultApi {
   /// Parameters:
   ///
   /// * [NewMemo] newMemo (required):
-  Future<Memo?> memosPost(NewMemo newMemo) async {
-    final response = await memosPostWithHttpInfo(newMemo);
+  Future<Memo?> memosPost(NewMemo newMemo,) async {
+    final response = await memosPostWithHttpInfo(newMemo,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'Memo',
-      ) as Memo;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Memo',) as Memo;
+
     }
     return null;
   }
 
-  Future<List<Memo>> memosSearch(String keyword) async {
-    final response = await _searchMemo(queryParamsMap: [
-      {'keyword': keyword}
-    ]);
+  /// メモの検索
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] keyword (required):
+  Future<Response> memosSearchGetWithHttpInfo(String keyword,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/memos/search';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'keyword', keyword));
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// メモの検索
+  ///
+  /// Parameters:
+  ///
+  /// * [String] keyword (required):
+  Future<List<Memo>?> memosSearchGet(String keyword,) async {
+    final response = await memosSearchGetWithHttpInfo(keyword,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>')
-              as List)
-          .cast<Memo>()
-          .toList(growable: false);
-    }
-    return [];
-  }
+      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>') as List)
+        .cast<Memo>()
+        .toList(growable: false);
 
-  Future<List<Memo>> getMemosByTag(String tag) async {
-    final response = await _getMemosByTag(queryParamsMap: [
-      {'tag': tag}
-    ]);
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Memo>')
-              as List)
-          .cast<Memo>()
-          .toList(growable: false);
-    }
-    return [];
-  }
-
-  Future<Response> _getMemosByTag(
-      {List<Map<String, dynamic>>? queryParamsMap}) async {
-    final path = '/memos/bytag';
-    final queryParams = <QueryParam>[];
-    queryParamsMap?.forEach((queryParamMap) {
-      queryParamMap.forEach((key, value) {
-        queryParams.add(QueryParam(key, value.toString()));
-      });
-    });
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-    const contentTypes = <String>[];
-    return apiClient.invokeAPI(
-      path,
-      'GET',
-      queryParams,
-      null,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
+    return null;
   }
 }

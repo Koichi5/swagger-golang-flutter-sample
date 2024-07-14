@@ -13,7 +13,9 @@ Method | HTTP request | Description
 [**memosMemoIdDelete**](DefaultApi.md#memosmemoiddelete) | **DELETE** /memos/{memoId} | メモの削除
 [**memosMemoIdGet**](DefaultApi.md#memosmemoidget) | **GET** /memos/{memoId} | 特定のメモの取得
 [**memosMemoIdPut**](DefaultApi.md#memosmemoidput) | **PUT** /memos/{memoId} | メモの更新
+[**memosMemoIdTagsPost**](DefaultApi.md#memosmemoidtagspost) | **POST** /memos/{memoId}/tags | タグの追加
 [**memosPost**](DefaultApi.md#memospost) | **POST** /memos | 新規メモの作成
+[**memosSearchGet**](DefaultApi.md#memossearchget) | **GET** /memos/search | メモの検索
 
 
 # **memosGet**
@@ -177,6 +179,49 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **memosMemoIdTagsPost**
+> Memo memosMemoIdTagsPost(memoId, memosMemoIdTagsPostRequest)
+
+タグの追加
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+final memoId = memoId_example; // String | 
+final memosMemoIdTagsPostRequest = MemosMemoIdTagsPostRequest(); // MemosMemoIdTagsPostRequest | 
+
+try {
+    final result = api_instance.memosMemoIdTagsPost(memoId, memosMemoIdTagsPostRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->memosMemoIdTagsPost: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **memoId** | **String**|  | 
+ **memosMemoIdTagsPostRequest** | [**MemosMemoIdTagsPostRequest**](MemosMemoIdTagsPostRequest.md)|  | 
+
+### Return type
+
+[**Memo**](Memo.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **memosPost**
 > Memo memosPost(newMemo)
 
@@ -214,6 +259,47 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **memosSearchGet**
+> List<Memo> memosSearchGet(keyword)
+
+メモの検索
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+final keyword = keyword_example; // String | 
+
+try {
+    final result = api_instance.memosSearchGet(keyword);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->memosSearchGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **keyword** | **String**|  | 
+
+### Return type
+
+[**List<Memo>**](Memo.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

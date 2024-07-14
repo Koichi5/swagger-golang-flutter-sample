@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:swagger_golang_flutter_sample/api/lib/api.dart';
@@ -23,26 +25,35 @@ class _MemoListScreenState extends State<MemoListScreen> {
     _fetchMemos();
   }
 
-  Future<void> _fetchMemos() async {
-    try {
-      final fetchedMemos = await api.memosGet();
-      setState(() {
-        memos = fetchedMemos ?? [];
-      });
-      // デバッグ出力を追加
-      for (var memo in memos) {
-        print('Memo ID: ${memo.id}, Title: ${memo.title}');
-      }
-    } catch (e) {
-      print('Error fetching memos: $e');
+Future<void> _fetchMemos() async {
+  try {
+    final response = await api.memosGetWithHttpInfo();
+    print('Raw API Response: ${response.body}');
+
+    final jsonList = json.decode(response.body) as List;
+    final fetchedMemos = jsonList
+        .map((jsonMemo) => Memo.fromJson(jsonMemo))
+        .where((memo) => memo != null)  // null要素をフィルタリング
+        .cast<Memo>()  // List<Memo?>からList<Memo>にキャスト
+        .toList();
+
+    setState(() {
+      memos = fetchedMemos;
+    });
+
+    for (var memo in memos) {
+      print('Flutter: Memo ID: ${memo.id}, Title: ${memo.title}');
     }
+  } catch (e) {
+    print('Error fetching memos: $e');
   }
+}
 
   Future<void> _searchMemos(String keyword) async {
     try {
-      final searchedMemos = await api.memosSearch(keyword);
+      final searchedMemos = await api.memosSearchGet(keyword);
       setState(() {
-        memos = searchedMemos;
+        memos = searchedMemos ?? [];
       });
     } catch (e) {
       print('Error searching memos: $e');
@@ -136,7 +147,7 @@ class _MemoListScreenState extends State<MemoListScreen> {
                   );
                 }
                 return Dismissible(
-                  key: Key(memo.id ?? ''),
+                  key: Key(memo.id.toString()),
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
@@ -148,7 +159,7 @@ class _MemoListScreenState extends State<MemoListScreen> {
                   ),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
-                    _deleteMemo(memo.id!);
+                    _deleteMemo(memo.id.toString());
                   },
                   child: ListTile(
                     title: Text(memo.title ?? ''),

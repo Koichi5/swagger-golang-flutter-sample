@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/Koichi5/swagger_golang_flutter_sample/models"
 	"github.com/Koichi5/swagger_golang_flutter_sample/repositories"
 )
@@ -18,8 +20,12 @@ func (s *MemoService) CreateMemo(memo *models.Memo) error {
 }
 
 func (s *MemoService) GetAllMemos() ([]models.Memo, error) {
-    return s.repo.GetAll()
-}
+    memos, err := s.repo.GetAll()
+    // デバッグ出力を追加
+    for _, memo := range memos {
+        fmt.Printf("Service: Memo ID=%v, Title=%s\n", memo.ID, memo.Title)
+    }
+    return memos, err}
 
 func (s *MemoService) GetMemoByID(id uint) (*models.Memo, error) {
     return s.repo.GetByID(id)

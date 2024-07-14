@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
+
 	"github.com/Koichi5/swagger_golang_flutter_sample/models"
 	"github.com/Koichi5/swagger_golang_flutter_sample/services"
 	"github.com/gin-gonic/gin"
@@ -46,6 +48,10 @@ func (h *MemoHandler) GetAllMemos(c *gin.Context) {
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
+    }
+    // デバッグ出力を追加
+    for _, memo := range memos {
+        fmt.Printf("Handler: Memo ID=%v, Title=%s\n", memo.ID, memo.Title)
     }
 
     c.JSON(http.StatusOK, memos)

@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"github.com/Koichi5/swagger_golang_flutter_sample/models"
 	"gorm.io/gorm"
 )
@@ -20,6 +22,9 @@ func (r *MemoRepository) Create(memo *models.Memo) error {
 func (r *MemoRepository) GetAll() ([]models.Memo, error) {
     var memos []models.Memo
     err := r.DB.Find(&memos).Error
+    for _, memo := range memos {
+        fmt.Printf("Repository: Memo ID=%v, Title=%s\n", memo.ID, memo.Title)
+    }
     return memos, err
 }
 

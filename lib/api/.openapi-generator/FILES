@@ -4,6 +4,7 @@ README.md
 analysis_options.yaml
 doc/DefaultApi.md
 doc/Memo.md
+doc/MemosMemoIdTagsPostRequest.md
 doc/NewMemo.md
 git_push.sh
 lib/api.dart
@@ -17,5 +18,6 @@ lib/auth/http_basic_auth.dart
 lib/auth/http_bearer_auth.dart
 lib/auth/oauth.dart
 lib/model/memo.dart
+lib/model/memos_memo_id_tags_post_request.dart
 lib/model/new_memo.dart
 pubspec.yaml

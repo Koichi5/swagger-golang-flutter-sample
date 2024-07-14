@@ -31,6 +31,7 @@ part 'auth/http_bearer_auth.dart';
 part 'api/default_api.dart';
 
 part 'model/memo.dart';
+part 'model/memos_memo_id_tags_post_request.dart';
 part 'model/new_memo.dart';
 
 

@@ -3,14 +3,18 @@ package models
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"time"
 	"gorm.io/gorm"
 )
 
 type Memo struct {
-	gorm.Model
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	Tags    Tags   `json:"tags" gorm:"type:text"`
+    ID        uint      `json:"id" gorm:"primarykey"`
+    CreatedAt time.Time `json:"createdAt"`
+    UpdatedAt time.Time `json:"updatedAt"`
+    DeletedAt gorm.DeletedAt `json:"deletedAt,omitempty" gorm:"index"`
+    Title     string    `json:"title"`
+    Content   string    `json:"content"`
+    Tags      Tags      `json:"tags" gorm:"type:text"`
 }
 
 type Tags []string

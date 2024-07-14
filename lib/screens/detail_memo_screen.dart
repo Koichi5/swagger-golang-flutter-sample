@@ -43,7 +43,7 @@ class DetailMemoScreen extends StatelessWidget {
             Wrap(
               spacing: 8.0,
               runSpacing: 4.0,
-              children: (memo.tags ?? [])
+              children: (memo.tags)
                   .map((tag) => Chip(
                         label: Text(tag),
                         backgroundColor: Colors.blue.shade100,

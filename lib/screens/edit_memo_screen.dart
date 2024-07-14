@@ -50,8 +50,8 @@ class _EditMemoScreenState extends State<EditMemoScreen> {
   Future<void> _updateMemo() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final updatedMemo = Memo(
-          id: widget.memo.id,
+        final updatedMemo = NewMemo(
+          // id: widget.memo.id,
           title: _titleController.text,
           content: _contentController.text,
           tags: _tags,

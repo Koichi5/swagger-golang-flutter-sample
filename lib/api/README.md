@@ -62,12 +62,15 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**memosMemoIdDelete**](doc//DefaultApi.md#memosmemoiddelete) | **DELETE** /memos/{memoId} | メモの削除
 *DefaultApi* | [**memosMemoIdGet**](doc//DefaultApi.md#memosmemoidget) | **GET** /memos/{memoId} | 特定のメモの取得
 *DefaultApi* | [**memosMemoIdPut**](doc//DefaultApi.md#memosmemoidput) | **PUT** /memos/{memoId} | メモの更新
+*DefaultApi* | [**memosMemoIdTagsPost**](doc//DefaultApi.md#memosmemoidtagspost) | **POST** /memos/{memoId}/tags | タグの追加
 *DefaultApi* | [**memosPost**](doc//DefaultApi.md#memospost) | **POST** /memos | 新規メモの作成
+*DefaultApi* | [**memosSearchGet**](doc//DefaultApi.md#memossearchget) | **GET** /memos/search | メモの検索
 
 
 ## Documentation For Models
 
  - [Memo](doc//Memo.md)
+ - [MemosMemoIdTagsPostRequest](doc//MemosMemoIdTagsPostRequest.md)
  - [NewMemo](doc//NewMemo.md)
 
 
